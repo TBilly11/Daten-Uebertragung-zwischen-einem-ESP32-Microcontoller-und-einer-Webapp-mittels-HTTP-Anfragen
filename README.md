@@ -1,1 +1,1 @@
-# Daten-bertragung-zwischen-einem-ESP32-Microcontoller-und-einer-Webapp-mittels-HTTP-Anfragen
+# Datenübertragung zwischen einem ESP32-Microcontoller und einer Webanwendung  mittels HTTP-Anfragen
