@@ -72,3 +72,33 @@ Es soll ein elektronisches Gerät realisiert werden, mit dem es möglich ist, du
 <img src="https://i.imgur.com/kapRb6c.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 <br />
 
+
+<h2> Aufbau</h2>
+<br />
+<p align="center">
+  <img src="https://i.imgur.com/a78HhZL.jpeg" width="800" />
+  <img src="https://i.imgur.com/7A9rFIG.jpeg" width="800" />
+</p>
+
+<br />
+<br />
+<h2> Einlogen-Seite</h2>
+Das Web-Interface soll durch Benutzername und Passwort geschützt sein. Der Zugang soll auf Administratoren beschränkt sein.
+<br />
+<br />
+<img src="https://i.imgur.com/jcRT7aK.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<br />
+
+<h2>Die Hauptseite</h2>
+Die Web-Interface wurde realisiert, der Admin kann Benutzer eintragen bzw. löschen. Es ist außerdem möglich, eingetragene Benutzer zu editieren. Eingetragene Benutzer sind persistent gespeichert , d.h. bei einem Stromausfall bleiben alle Daten erhalten.
+<br />
+<br />
+<img src="https://i.imgur.com/dNDweek.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<br />
+
+<h2>Protokoll-Seite</h2>
+Die Implementierung des Türprotokollierungssystems wurde erfolgreich abgeschlossen. Bei jeder Türöffnung werden nun der Benutzername, das Datum, die Uhrzeit sowie das verwendete Authentifizierungsverfahren protokolliert. Das Protokoll verfügt über eine einstellbare Länge; sobald die maximale Anzahl an Einträgen erreicht wird, werden die ältesten automatisch gelöscht. Zudem kann das Protokoll über das Benutzerinterface eingesehen werden.
+<br />
+<br />
+<img src="https://i.imgur.com/eRvtwsB.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<br />
