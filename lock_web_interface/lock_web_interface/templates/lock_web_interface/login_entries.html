@@ -1,0 +1,64 @@
+{% extends 'lock_web_interface/base.html' %}
+{% load humanize %}
+{% block content %}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item active"><a href="{% url 'management' %}">Management</a></li>
+    <li class="breadcrumb-item active">login records</li>
+</ol>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 style="font-weight: bold" class=""> Login Records</h2>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                    <th scope="col"> Name</th>
+                  <th scope="col">Date</th>
+                  <th scope="col"> Auth method</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for entry in entries_pages %}
+                <tr>
+                    <td scope="row">{{entry.get_full_name}}</td>             
+                    <td scope="row">{{entry.date}}</td>
+                    <td>{{entry.auth_type}}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+            <div>
+              <ul class="pagination">
+                  {% if entries_pages.has_previous %}
+                    <li class="page-item disabled">
+                      <a class="page-link" href="?page={{entries_pages.number}}&action=previous">&laquo;</a>
+                    </li>
+                  {% endif %}
+                <li class="page-item active">
+                  <a class="page-link" href="#">{{entries_pages.number}} sur {{entries_pages.paginator.num_pages}}</a>
+                </li>
+                  {% if entries_pages.has_next %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{entries_pages.number}}&action=next">&raquo;</a>
+                    </li>
+                  {% endif %}
+              </ul>
+            </div>
+            <form method="POST" action="{% url 'management_login_entries' %}">
+                {% csrf_token %}
+              <div class="form-row align-items-center">
+                <div class="col-sm-3 my-1">
+                  <label class="sr-only" for="nb-records">Records</label>
+                  <input type="text" class="form-control" id="nb-records" name="nb-records">
+                </div>
+                <div class="col-auto my-1">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

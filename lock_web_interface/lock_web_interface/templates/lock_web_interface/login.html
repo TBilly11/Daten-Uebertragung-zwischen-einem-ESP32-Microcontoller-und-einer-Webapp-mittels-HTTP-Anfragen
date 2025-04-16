@@ -1,0 +1,49 @@
+
+{% extends 'lock_web_interface/base.html' %}
+{% block css %}
+    <style>
+    .login-card{
+        min-height: 300px;
+        min-width: 500px;
+        border-radius: 5px;
+        border: 1px solid black;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .login-title{
+        font-weight: bold;
+        font-size: 22px;
+        text-align: center;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid black;
+    }
+    .form-login{
+        margin: 3px
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container-fluid background">
+        <div class="login-card">
+            <div class="login-title"> Login </div>
+            <div class="login-content">
+                {{error}}
+                <form class="form-login" action="{% url 'login'%}" method="post">
+                    {% csrf_token %}
+                    <div class="form-floating mb-3">
+                      <input type="text" name="username" class="form-control" id="floatingInput" placeholder="nom d'utilisateur" required>
+                      <label for="floatingInput">Username</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="password" name="password" class="form-control" placeholder="Mot de passe" required>
+                      <label for="floatingInput">Password</label>
+                    </div>
+                    <button type="submit" class="btn btn-success">Envoyer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

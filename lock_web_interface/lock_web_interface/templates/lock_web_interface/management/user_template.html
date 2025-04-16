@@ -1,0 +1,37 @@
+<form id="form-user" method="post" action="{% url 'management_users' %}">
+    <fieldset>
+        {{form.user_id}}
+        <div class="form-group">
+            <label class="form-label mt-4">{{form.first_name.label}}</label>
+            {{form.first_name}}
+            <div class="invalid-feedback">{{form.first_name.errors}}</div>
+        </div>
+        <div class="form-group">
+            <label class="form-label mt-4">{{form.last_name.label}}</label>
+            {{form.last_name}}
+            <div class="invalid-feedback">{{form.last_name.errors}}</div>
+        </div>
+        <div class="form-group">
+            <label class="form-label mt-4">{{form.email.label}}</label>
+            {{form.email}}
+            <div class="invalid-feedback">{{form.email.errors}}</div>
+        </div>
+        <div class="form-group">
+            <label class="form-label mt-4">{{form.username.label}}</label>
+            {{form.username}}
+            <div class="invalid-feedback">{{form.username.errors}}</div>
+        </div>
+        <div class="form-group">
+            <label class="form-label mt-4">{{form.one_factor_code.label}}</label>
+            {{form.one_factor_code}}
+            <div class="invalid-feedback">{{form.one_factor_code.errors}}</div>
+        </div>
+        <div class="form-group">
+            <label class="form-label mt-4">{{form.nfc.label}}</label>
+            {{form.nfc}}
+            <div class="invalid-feedback">{{form.nfc.errors}}</div>
+        </div>
+        <button type="submit" id="button-form-user" class="btn btn-success">{{action_form}}</button>
+        <button type="reset" class="btn btn-secondary" id="button-reset-form">Réinitialiser</button>
+    </fieldset>
+</form>

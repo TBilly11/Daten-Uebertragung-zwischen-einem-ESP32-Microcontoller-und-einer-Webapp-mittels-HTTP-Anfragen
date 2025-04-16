@@ -1,0 +1,216 @@
+{% extends 'lock_web_interface/base.html' %}
+{% block css %}
+<style>
+    .divider{
+        height: 40px;
+        width: 2px;
+    }
+    .toast-right{
+        position: fixed;
+        right: 50px;
+        top: 50px;
+        width: 100px;
+        min-height: 50px;
+        border-radius: 4px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item active"><a href="{% url 'management' %}">Management</a></li>
+</ol>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 style="font-weight: bold" class=""> Users records</h2>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">NFC</th>
+                    <th scope="col">One factor auth</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for user in user_pages %}
+                <tr>
+                  <th scope="row">{{user.get_full_name}}</th>
+                  <td>{{user.email}}</td>
+                    <td>{{user.nfc|default:""}}</td>
+                    <td><a class="toggle-auth" user-id="{{user.id}}" toggled="{{user.one_factor_auth_enabled}}">{{user.one_factor_auth_enabled}}</a></td>
+                    <td><a class="user-edit" user-id="{{user.id}}"> Edit</a>&nbsp;<a class="user-delete" user-id="{{user.id}}"> Delete</a>&nbsp;</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+            <div>
+              <ul class="pagination">
+                  {% if user_pages.has_previous %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{user_pages.number}}&action=previous">&laquo;</a>
+                    </li>
+                  {% endif %}
+                <li class="page-item active">
+                  <a class="page-link" href="#">{{user_pages.number}} sur {{user_pages.paginator.num_pages}}</a>
+                </li>
+                  {% if user_pages.has_next %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{user_pages.number}}&action=next">&raquo;</a>
+                    </li>
+                  {% endif %}
+              </ul>
+            </div>
+            <button class="btn btn-secondary my-2 my-sm-0">
+                <a href="{% url 'management_login_entries' %}" style="text-decoration: none"> Login records</a>
+            </button>
+        </div>
+        <div class="col-md-2 divider"></div>
+        <div class="col-md-5 ">
+            <h2 style="font-weight: bold" class=""> Add / Edit a user</h2>
+            <div class="block-edit-user">
+                {% include 'lock_web_interface/management/user_template.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $(document).ready(function (){
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        function toast(msg, purpose){
+            let t = `<div class="toast-right" class="${purpose}">${msg}</div>`
+            $('body').append(t)
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        function bindFormReset(){
+            setTimeout(()=>{
+                $('#button-reset-form').unbind('click')
+                $('#button-reset-form').bind('click', function (){
+                    for ( let elt of $("form input")){
+                        elt.value = ""
+                    }
+                })
+            },500)
+
+        }
+        bindFormReset()
+        function bind_form_event(){
+            $('#form-user').on('submit', function (e){
+            e.stopPropagation()
+            e.preventDefault()
+
+            $.ajax({
+                url: "{% url 'management_users' %}",
+                method: "POST",
+                headers: {'X-CSRFToken': csrftoken},
+                dataType: "json",
+                data: {
+                    'user_id': $('#id_user_id').val(),
+                    "first_name": $('#id_first_name').val(),
+                    "last_name": $('#id_last_name').val(),
+                    "email": $('#id_email').val(),
+                    "username": $('#id_username').val(),
+                    "one_factor_code": $('#id_one_factor_code').val(),
+                    "password1": $('#id_password1').val(),
+                    "password2": $('#id_password2').val(),
+                    "nfc": $('#id_nfc').val(),
+                },
+                success: function (res){
+                    console.log(res)
+                    window.location.reload()
+                },
+                error: function (err){
+                    console.log(err.responseJSON.msg)
+                    $('.block-edit-user').html(err.responseJSON.html)
+                }
+            })
+        })
+        }
+        bind_form_event()
+        $('.toggle-auth').each(function (){
+           $(this).on('click', function (){
+                let userId = $(this).attr('user-id')
+                let toggled = $(this).attr('toggled')
+                $.ajax({
+                    url: "{% url 'management_toggle_auth' %}",
+                    method: "post",
+                    headers: {'X-CSRFToken': csrftoken},
+                    dataType: "json",
+                    data: {
+                        "id":userId,
+                        "toggled": toggled
+                    },
+                    success: function (res){
+                        window.location.reload()
+                    },
+                    error: function (err){
+                        console.log(err.responseJSON.msg)
+                    }
+                })
+            })
+        })
+        $('.user-edit').each(function (){
+           $(this).on('click', function (){
+                let userId = $(this).attr('user-id')
+                $.ajax({
+                    url: "{% url 'management_users' %}",
+                    method: "get",
+                    data: {
+                        "id":userId,
+                    },
+                    success: function (res){
+                        $('.block-edit-user').html(res.html)
+
+                        bind_form_event()
+                        bindFormReset()
+                    },
+                    error: function (err){
+                        console.log(err.responseJSON.msg)
+                    }
+                })
+            })
+        })
+        $('.user-delete').each(function (){
+           $(this).on('click', function (){
+                let userId = $(this).attr('user-id')
+                $.ajax({
+                    url: "{% url 'management_users' %}",
+                    method: "delete",
+                    headers: {'X-CSRFToken': csrftoken},
+                    data: {
+                        "id":userId,
+                    },
+                    success: function (res){
+                        window.location.reload()
+                    },
+                    error: function (err){
+                        console.log(err.responseJSON.msg)
+                    }
+                })
+            })
+        })
+
+    })
+</script>
+{% endblock %}
